@@ -11,13 +11,16 @@
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/version.h>
+#include <linux/module.h>
 #include <linux/mount.h>
-
-#include "objsec.h"
 
 #include "ksu.h"
 #include "klog.h" // IWYU pragma: keep
+
+#ifdef CONFIG_KSU_SELINUX
+#include "objsec.h"
 #include "selinux/selinux.h"
+#endif
 
 #include "infra/file_wrapper.h"
 

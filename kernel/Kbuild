@@ -83,6 +83,12 @@ endif
 ifeq ($(CONFIG_KSU_DEBUG),y)
 ccflags-y += -DCONFIG_KSU_DEBUG=1
 endif
+ifeq ($(CONFIG_KSU_NON_ANDROID),y)
+ccflags-y += -DCONFIG_KSU_NON_ANDROID=1
+endif
+ifeq ($(CONFIG_KSU_SELINUX),y)
+ccflags-y += -DCONFIG_KSU_SELINUX=1
+endif
 ifeq ($(CONFIG_KSU_X86_PATCH_SYSCALL_DISPATCHER),y)
 ccflags-y += -DCONFIG_KSU_X86_PATCH_SYSCALL_DISPATCHER=1
 endif

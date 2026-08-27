@@ -121,7 +121,7 @@ int __init kernelsu_init(void)
     }
 #endif
 
-#ifdef MODULE
+#if defined(MODULE) && !defined(CONFIG_KSU_NON_ANDROID)
     ksu_late_loaded = (current->pid != 1);
 #else
     ksu_late_loaded = false;
@@ -178,9 +178,11 @@ int __init kernelsu_init(void)
     if (ksu_late_loaded) {
         pr_info("late load mode, skipping kprobe hooks\n");
 
+#ifdef CONFIG_KSU_SELINUX
         apply_kernelsu_rules();
         cache_sid();
         setup_ksu_cred();
+#endif
 
         // Grant current process (ksud late-load) root
         // with KSU SELinux domain before enforcing SELinux, so it
@@ -224,7 +226,7 @@ int __init kernelsu_init(void)
     }
 
 #ifdef MODULE
-#ifndef CONFIG_KSU_DEBUG
+#if !defined(CONFIG_KSU_DEBUG) && !defined(CONFIG_KSU_NON_ANDROID)
     kobject_del(&THIS_MODULE->mkobj.kobj);
 #endif
 #endif
