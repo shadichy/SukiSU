@@ -10,7 +10,10 @@ use rustix::{
         FsMountFlags, FsOpenFlags, MountAttrFlags, MoveMountFlags, UnmountFlags, fsconfig_create,
         fsmount, fsopen, move_mount, unmount,
     },
+    system::delete_module,
 };
+
+use sysinfo::System;
 
 struct AutoUmount {
     mountpoints: Vec<String>,
@@ -98,7 +101,7 @@ pub fn init() -> Result<()> {
     log::info!("Hello, KernelSU!");
 
     // mount /proc to access kernel interface
-    let _dontdrop = prepare_mount();
+    // let _dontdrop = prepare_mount();
 
     // This relies on the fact that we have /proc mounted
     unlimit_kmsg();
