@@ -167,10 +167,12 @@ void ksu_handle_execveat_ksud(const char *path, struct user_arg_ptr *argv)
         if (!init_second_stage_executed && check_argv(*argv, 1, "second_stage", buf, sizeof(buf))) {
             pr_info("/system/bin/init second_stage executed\n");
             ksu_preinit_release();
+#ifdef CONFIG_KSU_SELINUX
             ksu_selinux_hide_handle_second_stage();
             apply_kernelsu_rules();
             cache_sid();
             setup_ksu_cred();
+#endif
             // after apply_kernelsu_rules, so that selinux_hide has its sepolicy backup
             ksu_feature_apply_forced();
             // Not earlier: a blocked module failing to load in first stage

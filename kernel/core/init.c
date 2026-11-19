@@ -149,12 +149,14 @@ int __init kernelsu_init(void)
     pr_info("initializing symbol resolver\n");
     ksu_init_symbol_resolver();
 
+#ifdef CONFIG_KSU_SELINUX
     ret = ksu_selinux_inode_init();
     if (ret) {
         put_cred(ksu_cred);
         ksu_cred = NULL;
         return ret;
     }
+#endif
 
     if (spoof_release || spoof_version) {
         ksu_spoof_version(spoof_release, spoof_version);
@@ -166,7 +168,9 @@ int __init kernelsu_init(void)
     ksu_sulog_init();
     ksu_adb_root_init();
     ksu_lsm_hook_init();
+#ifdef CONFIG_KSU_SELINUX
     ksu_selinux_hide_init();
+#endif
     ksu_avc_spoof_init();
     ksu_shell_su_adb_only_init();
 
@@ -206,10 +210,12 @@ int __init kernelsu_init(void)
         ksu_feature_apply_forced();
         ksu_extension_apply_forced();
 
+#ifdef CONFIG_KSU_SELINUX
         if (!getenforce()) {
             pr_info("Permissive SELinux, enforcing\n");
             setenforce(true);
         }
+#endif
 
     } else {
         ksu_syscall_hook_manager_init();
@@ -257,7 +263,9 @@ void __exit kernelsu_exit(void)
 
     ksu_shell_su_adb_only_exit();
     ksu_avc_spoof_exit();
+#ifdef CONFIG_KSU_SELINUX
     ksu_selinux_hide_exit();
+#endif
     ksu_lsm_hook_exit();
     ksu_adb_root_exit();
     ksu_sulog_exit();
